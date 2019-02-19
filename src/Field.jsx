@@ -4,15 +4,16 @@ import Context from './Context';
 class Field extends Component {
   handleChange(value, Form) {
     const { name, normalize, onChange } = this.props;
+    const { _internal, ...formApi } = Form;
 
     if (normalize) {
       value = normalize(value);
     }
 
-    Form.setField(name, value).then(() => {
-      Form.validateField(name);
-      Form._internal.updateComponent(name);
-      onChange && onChange(value);
+    formApi.setField(name, value).then(() => {
+      formApi.validateField(name);
+      _internal.updateComponent(name);
+      onChange && onChange(value, formApi);
     });
   }
 

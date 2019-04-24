@@ -21,7 +21,17 @@ class Form extends Component {
 
   storeComponent = (name = '', ref) => (this.fields[name] = ref);
 
-  updateComponent = (name = '') => this.fields[name].forceUpdate();
+  updateComponent = (name = '') => {
+    if (this.fields[name]) {
+      this.fields[name].forceUpdate();
+    } else {
+      Object.keys(this.fields).forEach(fieldName => {
+        if (fieldName.contains(name)) {
+          this.fields[fieldName].forceUpdate();
+        }
+      });
+    }
+  };
 
   updateAllComponents = () => {
     Object.keys(this.fields).map(field => this.updateComponent(field));

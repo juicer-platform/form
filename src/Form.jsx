@@ -26,7 +26,7 @@ class Form extends Component {
       this.fields[name].forceUpdate();
     } else {
       Object.keys(this.fields).forEach(fieldName => {
-        if (fieldName.contains(name)) {
+        if (fieldName.includes(name)) {
           this.fields[fieldName].forceUpdate();
         }
       });

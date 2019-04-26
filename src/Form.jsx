@@ -96,6 +96,7 @@ class Form extends Component {
     } catch (e) {
       this.errors = e.inner.reduce((acc, err) => ({ ...acc, [err.path]: err.message }), {});
     }
+
     Object.keys(this.errors).map(name => this.touched.add(name));
     this.updateAllComponents();
 
@@ -120,6 +121,10 @@ class Form extends Component {
     return this.errors[name] || '';
   };
 
+  getErrors = () => {
+    return this.errors;
+  };
+
   API = {
     _internal: {
       storeComponent: this.storeComponent,
@@ -137,7 +142,8 @@ class Form extends Component {
     resetFields: this.resetFields,
     validate: this.validate,
     validateField: this.validateField,
-    getError: this.getError
+    getError: this.getError,
+    getErrors: this.getErrors
   };
 
   render() {

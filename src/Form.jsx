@@ -125,6 +125,10 @@ class Form extends Component {
     return this.errors;
   };
 
+  resetTouched = () => {
+    this.touched.clear();
+  };
+
   API = {
     _internal: {
       storeComponent: this.storeComponent,
@@ -143,7 +147,8 @@ class Form extends Component {
     validate: this.validate,
     validateField: this.validateField,
     getError: this.getError,
-    getErrors: this.getErrors
+    getErrors: this.getErrors,
+    resetTouched: this.resetTouched
   };
 
   render() {

@@ -3,7 +3,7 @@ import Context from './Context';
 
 class Field extends Component {
   handleChange(value, Form) {
-    const { name, normalize, onChange } = this.props;
+    const { name, normalize, onChange, validate = true } = this.props;
     const { _internal, ...formApi } = Form;
 
     if (normalize) {
@@ -11,7 +11,10 @@ class Field extends Component {
     }
 
     formApi.setField(name, value).then(() => {
-      formApi.validateField(name);
+      if (validate) {
+        formApi.validateField(name);
+      }
+
       _internal.updateComponent(name);
       onChange && onChange(value, formApi);
     });

@@ -3,7 +3,7 @@ import Context from './Context';
 
 class Field extends Component {
   handleChange(value, Form) {
-    const { name, normalize, onChange, validate = true } = this.props;
+    const { name, normalize, onChange, validate = true, update = [] } = this.props;
     const { _internal, ...formApi } = Form;
 
     if (normalize) {
@@ -16,6 +16,7 @@ class Field extends Component {
       }
 
       _internal.updateComponent(name);
+      update.map(fieldName => _internal.updateComponent(fieldName));
       onChange && onChange(value, formApi);
     });
   }

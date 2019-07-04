@@ -22,7 +22,7 @@ class Field extends Component {
   }
 
   render() {
-    const { name, render, normalize, onChange, ...rest } = this.props;
+    const { name, render, normalize, onChange, validate, ...rest } = this.props;
     const Component = render;
 
     return (

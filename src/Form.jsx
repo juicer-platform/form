@@ -75,7 +75,8 @@ class Form extends Component {
   };
 
   resetField = (name = '') => {
-    this.setField(name, getPath(this.state.initialValues, name));
+    delete this.fields[name];
+    delete this.errors[name];
     this.touched.delete(name);
     this.updateComponent(name);
   };

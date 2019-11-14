@@ -24,17 +24,19 @@ class Field extends Component {
     return (
       <Context.Consumer>
         {Form => {
-          const { storeComponent } = Form._internal;
+          const { getField, getError, isTouched, _internal } = Form;
+          const { storeComponent } = _internal;
           storeComponent(name, this);
 
           return (
             <Component
               {...rest}
-              error={Form.getError(name)}
+              error={getError(name)}
               name={name}
-              value={Form.getField(name)}
-              touched={Form.isTouched(name)}
+              value={getField(name)}
+              touched={isTouched(name)}
               onChange={value => this.handleChange(value, Form)}
+              getField={getField}
             />
           );
         }}

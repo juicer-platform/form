@@ -36,7 +36,6 @@ class Field extends Component {
               value={getField(name)}
               touched={isTouched(name)}
               onChange={value => this.handleChange(value, Form)}
-              getField={getField}
             />
           );
         }}

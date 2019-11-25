@@ -95,7 +95,22 @@ class Form extends Component {
     try {
       isValid = schema.validateSync(values, { abortEarly: false });
     } catch (e) {
-      this.errors = e.inner.reduce((acc, err) => ({ ...acc, [err.path]: err.message }), {});
+      this.errors = e.inner.reduce((acc, { message, path }) => {
+        let error = message;
+        let errorKey = path;
+
+        if (path.split('.').length > 1) {
+          const [_, key, index, subkey] = path.match(/(\w+)\[(\d+)\]\.(\w+)/);
+          errorKey = key;
+          error = {
+            key: subkey,
+            index: parseInt(index),
+            message
+          };
+        }
+
+        return { ...acc, [errorKey]: error };
+      }, {});
     }
 
     Object.keys(this.errors).map(name => this.touched.add(name));
@@ -111,8 +126,17 @@ class Form extends Component {
     try {
       isValid = schema.validateSyncAt(name, this.getFields());
       this.errors[name] = '';
-    } catch (e) {
-      this.errors[name] = e.message;
+    } catch ({ message, path }) {
+      if (path.split('.').length > 1) {
+        const [_, index, key] = path.match(/\w+\[(\d+)\]\.(\w+)/);
+        this.errors[name] = {
+          key,
+          index: parseInt(index),
+          message
+        };
+      } else {
+        this.errors[name] = message;
+      }
     }
 
     return isValid;

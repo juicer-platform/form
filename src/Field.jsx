@@ -10,11 +10,10 @@ class Field extends Component {
       value = normalize(value);
     }
 
-    formApi.setField(name, value).then(() => {
-      formApi.validateField(name);
-      _internal.updateComponent(name);
-      onChange && onChange(value, formApi);
-    });
+    formApi.setField(name, value);
+    formApi.validateField(name);
+    _internal.updateComponent(name);
+    onChange && onChange(value, formApi);
   }
 
   render() {

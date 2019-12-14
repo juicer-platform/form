@@ -4,10 +4,13 @@ import { getPath, setPath, clone } from 'utils';
 import Context from './Context';
 
 class Form extends Component {
-  state = {
-    initialValues: this.props.initialValues || {},
-    values: this.props.initialValues || {}
-  };
+  constructor(props) {
+    super(props);
+    const { initialValues = {} } = this.props;
+
+    this.values = initialValues;
+    this.initialValues = initialValues;
+  }
 
   componentDidMount() {
     const { formApi } = this.props;
@@ -15,6 +18,7 @@ class Form extends Component {
     formApi && formApi(rest);
   }
 
+  values = {};
   fields = {};
   errors = {};
   touched = new Set();
@@ -37,7 +41,7 @@ class Form extends Component {
     Object.keys(this.fields).map(field => this.updateComponent(field));
   };
 
-  getField = (name = '') => getPath(this.state.values, name);
+  getField = (name = '') => getPath(this.values, name);
 
   getFields = (names = [], path = '') => {
     if (names.length > 0) {
@@ -48,24 +52,20 @@ class Form extends Component {
       }, {});
     }
 
-    return this.state.values;
+    return this.values;
   };
 
   setField = (name = '', value = '') => {
-    const values = clone(this.state.values);
+    const values = clone(this.values);
     const currValue = getPath(values, name);
 
-    return new Promise(resolve => {
-      if (currValue !== value) {
-        setPath(values, name, value);
-        this.touched.add(name);
+    if (currValue !== value) {
+      setPath(values, name, value);
+      this.touched.add(name);
 
-        this.setState({ values }, () => {
-          this.updateComponent(name);
-          resolve(value);
-        });
-      }
-    });
+      this.values = values;
+      this.updateComponent(name);
+    }
   };
 
   setFields = (fields = {}) => {
@@ -75,14 +75,14 @@ class Form extends Component {
   };
 
   resetField = (name = '') => {
-    this.setField(name, getPath(this.state.initialValues, name));
+    this.setField(name, getPath(this.initialValues, name));
     delete this.errors[name];
     this.touched.delete(name);
     this.updateComponent(name);
   };
 
   resetFields = () => {
-    this.setState({ values: this.state.initialValues });
+    this.values = this.initialValues;
     [...this.touched].forEach(name => this.updateComponent(name));
     this.touched.clear();
   };

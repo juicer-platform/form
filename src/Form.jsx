@@ -87,6 +87,12 @@ class Form extends Component {
     this.touched.clear();
   };
 
+  clearFields = () => {
+    this.values = {};
+    [...this.touched].forEach(name => this.updateComponent(name));
+    this.touched.clear();
+  };
+
   validate = () => {
     const { schema } = this.props;
     const values = this.getFields();
@@ -173,7 +179,8 @@ class Form extends Component {
     validateField: this.validateField,
     getError: this.getError,
     getErrors: this.getErrors,
-    resetTouched: this.resetTouched
+    resetTouched: this.resetTouched,
+    clearFields: this.clearFields
   };
 
   render() {

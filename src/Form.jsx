@@ -160,6 +160,13 @@ class Form extends Component {
     this.touched.clear();
   };
 
+  getTouchedValues = () => {
+    const values = this.getFields();
+    const touched = [...this.touched];
+
+    return touched.reduce((acc, field) => ({ ...acc, [field]: values[field] }), {});
+  };
+
   API = {
     _internal: {
       storeComponent: this.storeComponent,
@@ -180,7 +187,8 @@ class Form extends Component {
     getError: this.getError,
     getErrors: this.getErrors,
     resetTouched: this.resetTouched,
-    clearFields: this.clearFields
+    clearFields: this.clearFields,
+    getTouchedValues: this.getTouchedValues
   };
 
   render() {

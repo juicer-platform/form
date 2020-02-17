@@ -56,6 +56,8 @@ class Form extends Component {
   };
 
   setField = (name = '', value = '') => {
+    const { onFormChange } = this.props;
+
     const values = clone(this.values);
     const currValue = getPath(values, name);
 
@@ -65,6 +67,7 @@ class Form extends Component {
 
       this.values = values;
       this.updateComponent(name);
+      onFormChange && onFormChange(name, value);
     }
   };
 

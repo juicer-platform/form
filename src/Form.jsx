@@ -67,7 +67,7 @@ class Form extends Component {
       target = Array.isArray(target) ? target : [target];
 
       if (action === 'hide') {
-        if (compare(value)) {
+        if (compare(value, this.values)) {
           this.hidden = [...this.hidden, ...target];
         } else {
           this.hidden = this.hidden.filter(field => !target.includes(field));

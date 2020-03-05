@@ -10,6 +10,7 @@ class Form extends Component {
 
     this.values = initialValues;
     this.initialValues = initialValues;
+    this.resolveConditions();
   }
 
   componentDidMount() {
@@ -21,6 +22,7 @@ class Form extends Component {
   values = {};
   fields = {};
   errors = {};
+  hidden = [];
   touched = new Set();
 
   storeComponent = (name = '', ref) => (this.fields[name] = ref);
@@ -55,8 +57,28 @@ class Form extends Component {
     return this.values;
   };
 
+  resolveConditions = conditions => {
+    conditions = conditions ? conditions : this.props.conditions;
+
+    conditions.forEach(({ name, target, action, compare }) => {
+      const value = this.values[name];
+      target = Array.isArray(target) ? target : [target];
+
+      if (action === 'hide') {
+        if (compare(value)) {
+          this.hidden = [...this.hidden, ...target];
+        } else {
+          this.hidden = this.hidden.filter(field => !target.includes(field));
+        }
+
+        target.forEach(t => this.updateComponent(t));
+      }
+    });
+  };
+
   setField = (name = '', value = '') => {
-    const { onFormChange } = this.props;
+    const { onFormChange, conditions = [] } = this.props;
+    const fieldConditions = conditions.filter(condition => name === condition.name);
 
     const values = clone(this.values);
     const currValue = getPath(values, name);
@@ -67,6 +89,7 @@ class Form extends Component {
 
       this.values = values;
       this.updateComponent(name);
+      this.resolveConditions(fieldConditions);
       onFormChange && onFormChange(name, value);
     }
   };
@@ -88,12 +111,14 @@ class Form extends Component {
     this.values = this.initialValues;
     [...this.touched].forEach(name => this.updateComponent(name));
     this.touched.clear();
+    this.resolveConditions();
   };
 
   clearFields = () => {
     this.values = {};
     [...this.touched].forEach(name => this.updateComponent(name));
     this.touched.clear();
+    this.resolveConditions();
   };
 
   validate = () => {
@@ -170,6 +195,10 @@ class Form extends Component {
     return touched.reduce((acc, field) => ({ ...acc, [field]: values[field] }), {});
   };
 
+  isFieldVisible = name => {
+    return !this.hidden.includes(name);
+  };
+
   API = {
     _internal: {
       storeComponent: this.storeComponent,
@@ -191,7 +220,8 @@ class Form extends Component {
     getErrors: this.getErrors,
     resetTouched: this.resetTouched,
     clearFields: this.clearFields,
-    getTouchedValues: this.getTouchedValues
+    getTouchedValues: this.getTouchedValues,
+    isFieldVisible: this.isFieldVisible
   };
 
   render() {

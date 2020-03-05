@@ -23,9 +23,13 @@ class Field extends Component {
     return (
       <Context.Consumer>
         {Form => {
-          const { getField, getError, isTouched, _internal } = Form;
+          const { getField, getError, isTouched, isFieldVisible, _internal } = Form;
           const { storeComponent } = _internal;
           storeComponent(name, this);
+
+          if (!isFieldVisible(name)) {
+            return null;
+          }
 
           return (
             <Component

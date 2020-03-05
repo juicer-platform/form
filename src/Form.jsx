@@ -57,8 +57,10 @@ class Form extends Component {
     return this.values;
   };
 
-  resolveConditions = conditions => {
-    conditions = conditions ? conditions : this.props.conditions;
+  resolveConditions = (conditions = []) => {
+    if (conditions.length === 0 && this.props.conditions) {
+      conditions = this.props.conditions;
+    }
 
     conditions.forEach(({ name, target, action, compare }) => {
       const value = this.values[name];

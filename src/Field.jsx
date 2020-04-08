@@ -22,9 +22,9 @@ class Field extends Component {
 
     return (
       <Context.Consumer>
-        {Form => {
-          const { getField, getError, isTouched, isFieldVisible, _internal } = Form;
-          const { storeComponent } = _internal;
+        {(Form) => {
+          const { getField, getError, isTouched, _internal } = Form;
+          const { storeComponent, isFieldVisible, isFieldDisabled } = _internal;
           storeComponent(name, this);
 
           if (!isFieldVisible(name)) {
@@ -38,7 +38,8 @@ class Field extends Component {
               name={name}
               value={getField(name)}
               touched={isTouched(name)}
-              onChange={value => this.handleChange(value, Form)}
+              onChange={(value) => this.handleChange(value, Form)}
+              disabled={isFieldDisabled}
             />
           );
         }}

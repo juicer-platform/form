@@ -17,7 +17,7 @@ class Field extends Component {
   }
 
   render() {
-    const { name, render, normalize, onChange, ...rest } = this.props;
+    const { name, render, normalize, onChange, disabled = false, ...rest } = this.props;
     const Component = render;
 
     return (
@@ -39,7 +39,7 @@ class Field extends Component {
               value={getField(name)}
               touched={isTouched(name)}
               onChange={(value) => this.handleChange(value, Form)}
-              disabled={isFieldDisabled(name)}
+              disabled={isFieldDisabled(name) || disabled}
             />
           );
         }}

@@ -10,35 +10,39 @@ class Field extends Component {
       value = normalize(value);
     }
 
-    formApi.setField(name, value).then(() => {
-      if (validate) {
-        formApi.validateField(name);
-      }
-
-      _internal.updateComponent(name);
-      update.map(fieldName => _internal.updateComponent(fieldName));
-      onChange && onChange(value, formApi);
-    });
+    formApi.setField(name, value);
+    if (validate) {
+      formApi.validateField(name);
+    }
+    _internal.updateComponent(name);
+    update.map((fieldName) => _internal.updateComponent(fieldName));
+    onChange && onChange(value, formApi);
   }
 
   render() {
-    const { name, render, normalize, onChange, validate, ...rest } = this.props;
+    const { name, render, normalize, onChange, validate, disabled = false, ...rest } = this.props;
     const Component = render;
 
     return (
       <Context.Consumer>
-        {Form => {
-          const { storeComponent } = Form._internal;
+        {(Form) => {
+          const { getField, getError, isTouched, _internal } = Form;
+          const { storeComponent, isFieldVisible, isFieldDisabled } = _internal;
           storeComponent(name, this);
+
+          if (!isFieldVisible(name)) {
+            return null;
+          }
 
           return (
             <Component
               {...rest}
-              error={Form.getError(name)}
+              error={getError(name)}
               name={name}
-              value={Form.getField(name)}
-              touched={Form.isTouched(name)}
-              onChange={value => this.handleChange(value, Form)}
+              value={getField(name)}
+              touched={isTouched(name)}
+              onChange={(value) => this.handleChange(value, Form)}
+              disabled={isFieldDisabled(name) || disabled}
             />
           );
         }}

@@ -6,8 +6,9 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, './dist'),
     filename: 'index.js',
-    library: 'store',
-    libraryTarget: 'umd'
+    library: 'form',
+    libraryTarget: 'umd',
+    globalObject: 'this'
   },
   module: {
     rules: [

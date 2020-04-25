@@ -120,6 +120,7 @@ class Form extends Component {
 
   resetFields = () => {
     this.values = this.initialValues;
+    this.errors = {};
     [...this.touched].forEach((name) => this.updateComponent(name));
     this.touched.clear();
     this.resolveConditions();

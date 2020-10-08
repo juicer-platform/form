@@ -7,7 +7,7 @@
     "build": "webpack"
   },
   "dependencies": {
-    "utils": "https://github.com/andi7/utils"
+    "utils": "https://github.com/juicer-platform/utils"
   },
   "devDependencies": {
     "webpack": "^4.29.0",
